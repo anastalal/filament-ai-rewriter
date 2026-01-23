@@ -1,62 +1,99 @@
-# :package_description
+# Filament AI Rewriter
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/:vendor_slug/:package_slug.svg?style=flat-square)](https://packagist.org/packages/:vendor_slug/:package_slug)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/:vendor_slug/:package_slug/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/:vendor_slug/:package_slug/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/:vendor_slug/:package_slug/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/:vendor_slug/:package_slug/actions?query=workflow%3A"Fix+PHP+code+styling"+branch%3Amain)
-[![Total Downloads](https://img.shields.io/packagist/dt/:vendor_slug/:package_slug.svg?style=flat-square)](https://packagist.org/packages/:vendor_slug/:package_slug)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/anastalal/filament-ai-rewriter.svg?style=flat-square)](https://packagist.org/packages/anastalal/filament-ai-rewriter)
+[![Total Downloads](https://img.shields.io/packagist/dt/anastalal/filament-ai-rewriter.svg?style=flat-square)](https://packagist.org/packages/anastalal/filament-ai-rewriter)
+[![License](https://img.shields.io/packagist/l/anastalal/filament-ai-rewriter.svg?style=flat-square)](https://packagist.org/packages/anastalal/filament-ai-rewriter)
 
-<!--delete-->
----
-This repo can be used to scaffold a Filament plugin. Follow these steps to get started:
+AI-powered content rewriting for FilamentPHP. Enhance your forms with intelligent text refinement, creative expansion, and natural translations directly within your Filament fields.
 
-1. Press the "Use this template" button at the top of this repo to create a new repo with the contents of this skeleton.
-2. Run "php ./configure.php" to run a script that will replace all placeholders throughout all the files.
-3. Make something great!
----
-<!--/delete-->
+![Filament AI Rewriter](https://raw.githubusercontent.com/anastalal/filament-ai-rewriter/main/art/banner.png)
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
+## Features
+
+- **Multi-Provider Support**: Seamlessly switch between OpenAI (GPT-4/3.5), Google Gemini, and Anthropic Claude.
+- **Unified Macro API**: Add AI functionality to any text-based field using a simple `->withAi()` macro.
+- **Smart Input Filtering**: Automatically hides AI actions on sensitive or strictly formatted fields (Password, Email, Numeric, etc.) to ensure data integrity.
+- **Context-Aware Lengths**: Intelligent response limits tailored to the field type (concise for `TextInput`, detailed for `Textarea` and Editors).
+- **SEO Keywords**: Naturally incorporate global or field-specific keywords into the rewritten content.
+- **No Manual Bolding**: Explicitly instructs AI to avoid unnecessary bolding or highlighting of keywords.
+- **Selective Cache Management**: Comes with a CLI utility to clear only AI-generated results from your cache.
+- **Fully Multilingual**: Native support for English and Arabic.
+
+## Support
+
+- **Filament**: v3.x, v4.x, and v5.x
+- **PHP**: ^8.1
 
 ## Installation
 
 You can install the package via composer:
 
 ```bash
-composer require :vendor_slug/:package_slug
+composer require anastalal/filament-ai-rewriter
 ```
 
-You can publish and run the migrations with:
+Publish the configuration file:
 
 ```bash
-php artisan vendor:publish --tag=":package_slug-migrations"
-php artisan migrate
+php artisan vendor:publish --tag="filament-ai-rewriter-config"
 ```
 
-You can publish the config file with:
+## Configuration
 
-```bash
-php artisan vendor:publish --tag=":package_slug-config"
+Add your API keys to your `.env` file:
+
+```env
+AI_REWRITER_PROVIDER=openai
+OPENAI_API_KEY=your-api-key-here
+
+# Optional: Global SEO keywords
+AI_REWRITER_GLOBAL_KEYWORDS="your, main, keywords"
 ```
 
-Optionally, you can publish the views using
-
-```bash
-php artisan vendor:publish --tag=":package_slug-views"
-```
-
-This is the contents of the published config file:
-
-```php
-return [
-];
-```
+The configuration file allows you to customize providers, models, default styles, and detailed AI prompts.
 
 ## Usage
 
+### Simple Usage
+
+Add AI rewrite capability to any `TextInput`, `Textarea`, `RichEditor`, or `MarkdownEditor`:
+
 ```php
-$variable = new VendorName\Skeleton();
-echo $variable->echoPhrase('Hello, VendorName!');
+use Filament\Forms\Components\Textarea;
+
+Textarea::make('description')
+    ->withAi()
 ```
+
+### Advanced Usage
+
+Customize the AI behavior for specific fields:
+
+```php
+use Filament\Forms\Components\RichEditor;
+
+RichEditor::make('content')
+    ->withAi([
+        'style' => 'creative',
+        'keywords' => 'sale, unique, offer',
+        'temperature' => 0.8,
+        'max_tokens' => 2000,
+    ])
+```
+
+### Global Keywords
+
+Keywords set in `config/filament-ai-rewriter.php` are automatically used in every request. Keywords provided via the `withAi()` macro will be merged with the global ones.
+
+## CLI Commands
+
+To clear all AI-generated results from the cache:
+
+```bash
+php artisan filament-ai-rewriter:clear-cache
+```
+
+*Note: Selective clearing requires a cache driver that supports tags (e.g., Redis or Memcached). You can use `--force` to clear the entire cache if needed.*
 
 ## Testing
 
@@ -64,21 +101,9 @@ echo $variable->echoPhrase('Hello, VendorName!');
 composer test
 ```
 
-## Changelog
-
-Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
-
-## Contributing
-
-Please see [CONTRIBUTING](.github/CONTRIBUTING.md) for details.
-
-## Security Vulnerabilities
-
-Please review [our security policy](../../security/policy) on how to report security vulnerabilities.
-
 ## Credits
 
-- [:author_name](https://github.com/:author_username)
+- [anastalal](https://github.com/anastalal)
 - [All Contributors](../../contributors)
 
 ## License

@@ -1,25 +1,27 @@
 <?php
 
-namespace VendorName\Skeleton;
+namespace Anastalal\FilamentAiRewriter;
 
 use Filament\Contracts\Plugin;
 use Filament\Panel;
 
-class SkeletonPlugin implements Plugin
+use function Filament\filament;
+
+class AiRewriterPlugin implements Plugin
 {
     public function getId(): string
     {
-        return 'skeleton';
+        return 'filament-ai-rewriter';
     }
 
     public function register(Panel $panel): void
     {
-        //
+        // Registration logic if needed
     }
 
     public function boot(Panel $panel): void
     {
-        //
+        // Boot logic if needed
     }
 
     public static function make(): static

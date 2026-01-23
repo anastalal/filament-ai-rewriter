@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace Anastalal\FilamentAiRewriter\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class FilamentAiRewriterCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'filament-ai-rewriter';
 
     public $description = 'My command';
 
