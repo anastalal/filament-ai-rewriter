@@ -33,7 +33,7 @@ return [
     | SEO Global Keywords
     |--------------------------------------------------------------------------
     |
-    | These keywords will be included in all AI rewrite requests unless 
+    | These keywords will be included in all AI rewrite requests unless
     | overridden at the component level.
     |
     */

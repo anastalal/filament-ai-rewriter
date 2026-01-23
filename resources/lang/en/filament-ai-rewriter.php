@@ -6,7 +6,7 @@ return [
         'rewriting' => 'Rewriting...',
         'select_style' => 'Select writing style',
     ],
-    
+
     'styles' => [
         'improve' => 'Improve writing',
         'professional' => 'Professional tone',
@@ -19,7 +19,7 @@ return [
         'creative' => 'Creative writing',
         'formal' => 'Formal writing',
     ],
-    
+
     'messages' => [
         'success' => 'Text rewritten successfully!',
         'error' => 'Failed to rewrite text. Please try again.',
@@ -28,7 +28,7 @@ return [
         'api_error' => 'API error: :message',
         'config_error' => 'Please configure AI API keys in your .env file.',
     ],
-    
+
     'settings' => [
         'provider' => 'AI Provider',
         'model' => 'AI Model',

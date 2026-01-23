@@ -14,29 +14,32 @@ class ClearAiRewriterCacheCommand extends Command
     public function handle(): int
     {
         $cache = Cache::getFacadeRoot();
-        
+
         if (method_exists($cache, 'tags')) {
             $this->info('Finding and clearing AI rewrite cache entries via tags...');
             Cache::tags(['filament-ai-rewriter'])->flush();
             $this->info(__('filament-ai-rewriter::filament-ai-rewriter.commands.clear_cache.success'));
+
             return self::SUCCESS;
         }
 
         $this->warn('Selective cache clearing is only supported by drivers that support tags (e.g., redis, memcached).');
-        
+
         if ($this->option('force')) {
             if ($this->confirm('Your cache driver does not support tags. This will clear the ENTIRE application cache. Proceed?', false)) {
                 Cache::flush();
                 $this->info('Entire application cache cleared.');
+
                 return self::SUCCESS;
             }
-            
+
             $this->info('Operation cancelled.');
+
             return self::SUCCESS;
         }
 
         $this->error('Failed to clear cache: Driver does not support tags. Use --force to clear the entire cache instead.');
-        
+
         return self::FAILURE;
     }
 }
