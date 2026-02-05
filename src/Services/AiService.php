@@ -43,7 +43,8 @@ class AiService
 
         $keywords = !empty($mergedKeywords) ? $mergedKeywords : null;
         
-        $cacheKey = $this->generateCacheKey($text, $provider, $model, $style, $type, $keywords);
+        $temperature = $options['temperature'] ?? $this->config['temperature'];
+        $cacheKey = $this->generateCacheKey($text, $provider, $model, $style, $type, $keywords, $temperature);
         
         $cache = Cache::getFacadeRoot();
         if (method_exists($cache, 'tags')) {
@@ -149,8 +150,9 @@ class AiService
 
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
+            'x-goog-api-key' => $apiKey,
         ])->timeout($this->config['timeout'])
-          ->post("https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent?key={$apiKey}", [
+          ->post("https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent", [
             'contents' => [
                 [
                     'parts' => [
@@ -227,15 +229,10 @@ class AiService
         return $prompt;
     }
     
-    protected function getUserPrompt(string $text, string $style): string
+    protected function generateCacheKey(string $text, string $provider, string $model, string $style, string $type, ?string $keywords = null, ?float $temperature = null): string
     {
-        // Not used anymore as we moved logic to system prompt
-        return $text;
-    }
-    
-    protected function generateCacheKey(string $text, string $provider, string $model, string $style, string $type, ?string $keywords = null): string
-    {
-        return 'ai_rewrite:' . md5($text . $provider . $model . $style . $type . ($keywords ?? ''));
+        $temperature = $temperature ?? $this->config['temperature'];
+        return 'ai_rewrite:' . md5($text . $provider . $model . $style . $type . ($keywords ?? '') . $temperature);
     }
     
     public function getAvailableProviders(): array

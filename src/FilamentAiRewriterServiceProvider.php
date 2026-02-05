@@ -2,19 +2,14 @@
 
 namespace Anastalal\FilamentAiRewriter;
 
-use Filament\Forms\Components\Actions\Action;
-use Filament\Forms\Components\MarkdownEditor;
-use Filament\Forms\Components\RichEditor;
+use Filament\Actions\Action;
 use Filament\Forms\Components\Textarea;
+use Spatie\LaravelPackageTools\Package;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
-use Filament\Support\Assets\Css;
-use Filament\Support\Assets\Js;
-use Filament\Support\Facades\FilamentAsset;
-use Livewire\Features\SupportTesting\Testable;
-use Spatie\LaravelPackageTools\Package;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\MarkdownEditor;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Anastalal\FilamentAiRewriter\Commands\FilamentAiRewriterCommand;
 
 class FilamentAiRewriterServiceProvider extends PackageServiceProvider
 {
@@ -42,7 +37,23 @@ class FilamentAiRewriterServiceProvider extends PackageServiceProvider
     
     protected function registerFormComponents(): void
     {
-        $macro = function (array $options = []) {
+        $macro = fn (array $options = []) => $this->createAiRewriteMacro($options);
+
+        TextInput::macro('withAi', $macro);
+        Textarea::macro('withAi', $macro);
+        
+        if (class_exists(RichEditor::class)) {
+            RichEditor::macro('withAi', $macro);
+        }
+        
+        if (class_exists(MarkdownEditor::class)) {
+            MarkdownEditor::macro('withAi', $macro);
+        }
+    }
+
+    protected function createAiRewriteMacro(array $options = []): callable
+    {
+        return function () use ($options) {
             /** @var TextInput|Textarea $this */
             
             $this->hintAction(
@@ -115,17 +126,6 @@ class FilamentAiRewriterServiceProvider extends PackageServiceProvider
             
             return $this;
         };
-
-        TextInput::macro('withAi', $macro);
-        Textarea::macro('withAi', $macro);
-        
-        if (class_exists(RichEditor::class)) {
-            RichEditor::macro('withAi', $macro);
-        }
-        
-        if (class_exists(MarkdownEditor::class)) {
-            MarkdownEditor::macro('withAi', $macro);
-        }
     }
 
     /**
@@ -134,7 +134,6 @@ class FilamentAiRewriterServiceProvider extends PackageServiceProvider
     protected function getCommands(): array
     {
         return [
-            FilamentAiRewriterCommand::class,
             Commands\ClearAiRewriterCacheCommand::class,
         ];
     }

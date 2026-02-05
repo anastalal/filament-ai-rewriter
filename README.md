@@ -6,7 +6,7 @@
 
 AI-powered content rewriting for FilamentPHP. Enhance your forms with intelligent text refinement, creative expansion, and natural translations directly within your Filament fields.
 
-![Filament AI Rewriter](https://raw.githubusercontent.com/anastalal/filament-ai-rewriter/main/art/banner.png)
+![Filament AI Rewriter](image.png)
 
 ## Features
 
@@ -16,13 +16,13 @@ AI-powered content rewriting for FilamentPHP. Enhance your forms with intelligen
 - **Context-Aware Lengths**: Intelligent response limits tailored to the field type (concise for `TextInput`, detailed for `Textarea` and Editors).
 - **SEO Keywords**: Naturally incorporate global or field-specific keywords into the rewritten content.
 - **No Manual Bolding**: Explicitly instructs AI to avoid unnecessary bolding or highlighting of keywords.
-- **Selective Cache Management**: Comes with a CLI utility to clear only AI-generated results from your cache.
-- **Fully Multilingual**: Native support for English and Arabic.
+- **Smart Caching**: Temperature-aware caching system with tag support for selective cache clearing.
+- **Selective Cache Management**: CLI utility to clear only AI-generated results from your cache.
+- **Fully Multilingual**: Native support for English and Arabic with extensible translation system.
 
 ## Support
 
 - **Filament**: v3.x, v4.x, and v5.x
-- **PHP**: ^8.1
 
 ## Installation
 
@@ -87,13 +87,17 @@ Keywords set in `config/filament-ai-rewriter.php` are automatically used in ever
 
 ## CLI Commands
 
-To clear all AI-generated results from the cache:
+Clear all AI-generated results from the cache:
 
 ```bash
 php artisan filament-ai-rewriter:clear-cache
 ```
 
-*Note: Selective clearing requires a cache driver that supports tags (e.g., Redis or Memcached). You can use `--force` to clear the entire cache if needed.*
+**Note**: Selective clearing requires a cache driver that supports tags (e.g., Redis or Memcached). Use `--force` to clear the entire application cache if your driver doesn't support tags:
+
+```bash
+php artisan filament-ai-rewriter:clear-cache --force
+```
 
 ## Testing
 
