@@ -2,8 +2,8 @@
 
 namespace Anastalal\FilamentAiRewriter\Facades;
 
-use Illuminate\Support\Facades\Facade;
 use Anastalal\FilamentAiRewriter\Services\AiService;
+use Illuminate\Support\Facades\Facade;
 
 /**
  * @see \Anastalal\FilamentAiRewriter\FilamentAiRewriter

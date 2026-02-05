@@ -3,12 +3,12 @@
 namespace Anastalal\FilamentAiRewriter;
 
 use Filament\Actions\Action;
+use Filament\Forms\Components\MarkdownEditor;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Textarea;
-use Spatie\LaravelPackageTools\Package;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
-use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\MarkdownEditor;
+use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
 class FilamentAiRewriterServiceProvider extends PackageServiceProvider
@@ -34,18 +34,18 @@ class FilamentAiRewriterServiceProvider extends PackageServiceProvider
         // Register Form Components
         $this->registerFormComponents();
     }
-    
+
     protected function registerFormComponents(): void
     {
         $macro = fn (array $options = []) => $this->createAiRewriteMacro($options);
 
         TextInput::macro('withAi', $macro);
         Textarea::macro('withAi', $macro);
-        
+
         if (class_exists(RichEditor::class)) {
             RichEditor::macro('withAi', $macro);
         }
-        
+
         if (class_exists(MarkdownEditor::class)) {
             MarkdownEditor::macro('withAi', $macro);
         }
@@ -55,13 +55,12 @@ class FilamentAiRewriterServiceProvider extends PackageServiceProvider
     {
         return function () use ($options) {
             /** @var TextInput|Textarea $this */
-            
             $this->hintAction(
                 function ($component) use ($options) {
                     if ($component instanceof TextInput) {
                         $type = $component->getType();
                         $restrictedTypes = ['email', 'numeric', 'integer', 'password', 'tel', 'url'];
-                        
+
                         if (in_array($type, $restrictedTypes)) {
                             return null;
                         }
@@ -75,7 +74,7 @@ class FilamentAiRewriterServiceProvider extends PackageServiceProvider
                         ->action(function () use ($component, $options) {
                             $state = $component->getState();
                             $type = 'text';
-                            
+
                             if ($component instanceof Textarea) {
                                 $type = 'textarea';
                             } elseif (class_exists(RichEditor::class) && $component instanceof RichEditor) {
@@ -83,18 +82,19 @@ class FilamentAiRewriterServiceProvider extends PackageServiceProvider
                             } elseif (class_exists(MarkdownEditor::class) && $component instanceof MarkdownEditor) {
                                 $type = 'markdown';
                             }
-                            
+
                             if (empty(trim($state ?? ''))) {
                                 Notification::make()
                                     ->title(__('filament-ai-rewriter::filament-ai-rewriter.messages.empty'))
                                     ->warning()
                                     ->send();
+
                                 return;
                             }
-                            
+
                             try {
                                 $service = app(\Anastalal\FilamentAiRewriter\Services\AiService::class);
-                                
+
                                 $rewrittenText = $service->rewrite($state, [
                                     'provider' => $options['provider'] ?? null,
                                     'model' => $options['model'] ?? null,
@@ -104,10 +104,10 @@ class FilamentAiRewriterServiceProvider extends PackageServiceProvider
                                     'type' => $type,
                                     'keywords' => $options['keywords'] ?? null,
                                 ]);
-                                
+
                                 if ($rewrittenText) {
                                     $component->state($rewrittenText);
-                                    
+
                                     Notification::make()
                                         ->title(__('filament-ai-rewriter::filament-ai-rewriter.messages.success'))
                                         ->success()
@@ -123,7 +123,7 @@ class FilamentAiRewriterServiceProvider extends PackageServiceProvider
                         });
                 }
             );
-            
+
             return $this;
         };
     }
