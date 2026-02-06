@@ -37,23 +37,7 @@ class FilamentAiRewriterServiceProvider extends PackageServiceProvider
 
     protected function registerFormComponents(): void
     {
-        $macro = fn (array $options = []) => $this->createAiRewriteMacro($options);
-
-        TextInput::macro('withAi', $macro);
-        Textarea::macro('withAi', $macro);
-
-        if (class_exists(RichEditor::class)) {
-            RichEditor::macro('withAi', $macro);
-        }
-
-        if (class_exists(MarkdownEditor::class)) {
-            MarkdownEditor::macro('withAi', $macro);
-        }
-    }
-
-    protected function createAiRewriteMacro(array $options = []): callable
-    {
-        return function () use ($options) {
+        $macro = function (array $options = []) {
             /** @var TextInput|Textarea $this */
             $this->hintAction(
                 function ($component) use ($options) {
@@ -126,6 +110,17 @@ class FilamentAiRewriterServiceProvider extends PackageServiceProvider
 
             return $this;
         };
+
+        TextInput::macro('withAi', $macro);
+        Textarea::macro('withAi', $macro);
+        
+        if (class_exists(RichEditor::class)) {
+            RichEditor::macro('withAi', $macro);
+        }
+        
+        if (class_exists(MarkdownEditor::class)) {
+            MarkdownEditor::macro('withAi', $macro);
+        }
     }
 
     /**
