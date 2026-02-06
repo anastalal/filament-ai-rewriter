@@ -113,11 +113,11 @@ class FilamentAiRewriterServiceProvider extends PackageServiceProvider
 
         TextInput::macro('withAi', $macro);
         Textarea::macro('withAi', $macro);
-        
+
         if (class_exists(RichEditor::class)) {
             RichEditor::macro('withAi', $macro);
         }
-        
+
         if (class_exists(MarkdownEditor::class)) {
             MarkdownEditor::macro('withAi', $macro);
         }
